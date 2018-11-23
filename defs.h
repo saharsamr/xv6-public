@@ -1,3 +1,5 @@
+#define NULL 0
+
 struct buf;
 struct context;
 struct file;
@@ -185,6 +187,16 @@ void            switchuvm(struct proc*);
 void            switchkvm(void);
 int             copyout(pde_t*, uint, void*, uint);
 void            clearpteu(pde_t *pgdir, char *uva);
+
+// proc_list.c
+void              init_proc_list(struct proc_list*);
+struct proc_list* find_last(struct proc_list*);
+void              add_to_list(struct proc_list*, struct proc_list*);
+
+// mutex.c
+void              init_mutex(struct mutex*, char*);
+void              aquire_mutex(struct mutex*);
+void              release_mutex(struct mutex*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
