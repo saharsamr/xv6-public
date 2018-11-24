@@ -1,4 +1,6 @@
 // Per-CPU state
+#include <sys/time.h>
+
 struct cpu {
   uchar apicid;                // Local APIC ID
   struct context *scheduler;   // swtch() here to enter scheduler
@@ -32,6 +34,14 @@ struct context {
   uint eip;
 };
 
+
+struct proc_ticket{
+    time_t lock_id;
+    int ticket;
+    struct proc_ticket *next;
+    struct proc_ticket *prev;
+};
+
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state
@@ -49,6 +59,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  struct proc_ticket *ticket_locks_head;
 };
 
 // Process memory is laid out contiguously, low addresses first:

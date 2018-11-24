@@ -6,6 +6,8 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "ticketlock.h"
+#include "mutex.h"
 
 struct {
   struct spinlock lock;
@@ -530,5 +532,37 @@ procdump(void)
         cprintf(" %p", pc[i]);
     }
     cprintf("\n");
+  }
+}
+
+void add_ticket(struct proc *p, struct proc_ticket *ticket){
+  struct proc_ticket *current = p->ticket_locks_head;
+  while(current->next != NULL)
+    current = current->next;
+  current->next = ticket;
+  ticket->prev = current;
+  ticket->next = NULL;
+}
+
+void wake_up_next_process_ticketlock(struct ticket_lock *lock){
+  if(lock->current_ticket_num < lock->generated_ticket_num){
+    struct proc *p;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(is_in_list(lock->waiting_processes, p) && proc_has_ticket(p, lock)){
+        p->state = RUNNABLE;
+      }
+    }
+  }
+}
+
+void wake_up_next_process_mutex(struct mutex *lock){
+  if(lock->waiting_list_head != NULL){
+    struct proc *p;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(is_in_list(lock->waiting_list_head, p)){
+        p->state = RUNNABLE;
+        return;;
+      }
+    }
   }
 }

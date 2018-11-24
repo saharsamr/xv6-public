@@ -2,8 +2,7 @@
 // Created by Sahar on 11/22/2018.
 //
 
-
-#include "proc_list.h"
+#include "proc_list.h"t
 #include "defs.h"
 #include "mutex.h"
 #include "proc.h"
@@ -40,8 +39,10 @@ void aquire_mutex(struct mutex *mutex_){ //TODO: hamash kollo malloc mikad.
 void release_mutex(struct mutex *mutex_){
     pushcli();
     struct proc *p = myproc();
-    if(mutex_->pid == p->pid){
+    if(mutex_->pid == p->pid)
         mutex_->lock.locked = NOT_LOCKED;
-    }
+    struct proc_list *temp = mutex_->waiting_list_head;
+    if(temp != NULL)
+        wake_up_next_process_mutex(mutex_);
     popcli();
 }

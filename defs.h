@@ -13,6 +13,8 @@ struct stat;
 struct superblock;
 struct proc_list;
 struct mutex;
+struct ticket_lock;
+struct proc_ticket;
 
 // bio.c
 void            binit(void);
@@ -124,6 +126,9 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+void            add_ticket(struct proc*, struct proc_ticket*);
+void            wake_up_next_process_ticketlock(struct ticket_lock*);
+void            wake_up_next_process_mutex(struct mutex*);
 
 // swtch.S
 void            swtch(struct context**, struct context*);
@@ -199,6 +204,14 @@ void              add_to_list(struct proc_list*, struct proc_list*);
 void              init_mutex(struct mutex*, char*);
 void              aquire_mutex(struct mutex*);
 void              release_mutex(struct mutex*);
+
+// ticketlock.c
+void              intit_ticket_lock(struct ticket_lock*, int);
+void              require_ticket_lock(struct ticket_lock*);
+void              give_ticket_to_proc(struct ticket_lock*);
+int               proc_has_ticket(struct proc*, struct ticket_lock*);
+int               is_in_list(struct proc_list*, struct proc*);
+void              remove_from_list(struct proc*, struct proc_list*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
