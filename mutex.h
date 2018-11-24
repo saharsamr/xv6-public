@@ -4,12 +4,6 @@
 
 #include "spinlock.h"
 
-struct proc_list{
-    int pid;
-    struct proc_list *next;
-    struct proc_list *prev;
-};
-
 struct mutex{
     struct spinlock lock;
     int pid; //The id of the process that currently held the lock.

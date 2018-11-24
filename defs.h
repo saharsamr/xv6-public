@@ -11,6 +11,8 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+struct proc_list;
+struct mutex;
 
 // bio.c
 void            binit(void);

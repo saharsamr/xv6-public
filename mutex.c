@@ -2,6 +2,8 @@
 // Created by Sahar on 11/22/2018.
 //
 
+
+#include "proc_list.h"
 #include "defs.h"
 #include "mutex.h"
 #include "proc.h"
@@ -9,7 +11,7 @@
 #define LOCKED 1
 #define NOT_LOCKED 0
 
-void init_mutex(struct mutex *lock, char *name){
+void init_mutex(struct mutex *lock, char *name) {
     pushcli();
     initlock(&lock->lock, name);
     lock->waiting_list_head = NULL;
