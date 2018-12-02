@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "ticket_lock.h"
 
 struct {
   struct spinlock lock;
@@ -449,6 +450,28 @@ sleep(void *chan, struct spinlock *lk)
     release(&ptable.lock);
     acquire(lk);
   }
+}
+
+// Atomically release lock and sleep on chan.
+// Reacquires lock when awakened.
+void
+sleep_on_tlock(void *chan, struct ticket_lock *lk)
+{
+  struct proc *p = myproc();
+
+  if(p == 0)
+    panic("sleep");
+  acquire(&ptable.lock);  //DOC: sleeplock1
+  // Go to sleep.
+  p->chan = chan;
+  p->state = SLEEPING;
+
+  sched();
+
+  // Tidy up.
+  p->chan = 0;
+
+  release(&ptable.lock);
 }
 
 //PAGEBREAK!
