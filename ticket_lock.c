@@ -47,3 +47,8 @@ int holding_ticket_lock(struct ticket_lock* lock){
     return (lock->process == p);
 }
 
+void ticketlocktest(struct ticket_lock* lock){
+    acquire_ticket_lock(lock);
+    release_ticket_lock(lock);
+}
+

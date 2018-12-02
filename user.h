@@ -1,3 +1,5 @@
+#include "ticket_lock.h"
+
 struct stat;
 struct rtcdate;
 
@@ -23,6 +25,8 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+struct ticket_lock* ticketlockinit();
+void ticketlocktest();
 
 // ulib.c
 int stat(const char*, struct stat*);

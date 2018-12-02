@@ -193,6 +193,7 @@ void            ticket_lock_init(struct ticket_lock*);
 void            acquire_ticket_lock(struct ticket_lock*);
 void            release_ticket_lock(struct ticket_lock*);
 int             holding_ticket_lock(struct ticket_lock*);
+void            ticketlocktest(struct ticket_lock*);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))

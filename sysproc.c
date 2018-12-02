@@ -1,3 +1,4 @@
+#include <malloc.h>
 #include "types.h"
 #include "x86.h"
 #include "defs.h"
@@ -88,4 +89,16 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+struct ticket_lock* sys_ticketlockinit(void)
+{
+  struct ticket_lock* lock = (struct ticket_lock*)malloc(1);
+  ticket_lock_init(lock);
+  return lock;
+}
+
+void sys_ticketlocktest(struct ticket_lock* lock)
+{
+  ticketlocktest(lock);
 }
